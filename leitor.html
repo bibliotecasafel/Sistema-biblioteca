@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leitor de ISBN - CECM Santa Felicidade</title>
+  <script src="https://unpkg.com/@zxing/library@0.20.0/umd/index.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    #camera-container { position: relative; width: 100%; max-width: 600px; margin: 0 auto; background: #000; height: 50vh; border-radius: 8px; overflow: hidden; display: none; }
+    video { width: 100%; height: 100%; object-fit: cover; }
+    .target-box { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; height: 25%; border: 3px solid var(--accent); box-shadow: 0 0 0 9999px rgba(0,0,0,0.5); }
+  </style>
+</head>
+<body style="background: var(--bg);">
+
+  <div id="login-screen" class="panel" style="max-width: 400px; margin-top: 50px; display:none;">
+    <h2>Login do Scanner</h2>
+    <div class="input-group"><label>E-mail</label><input type="email" id="login-email"></div>
+    <div class="input-group"><label>Senha</label><input type="password" id="login-senha"></div>
+    <button id="btn-login" class="btn-blue" style="width:100%;">Entrar</button>
+    <div id="login-msg" style="color:red; font-size:0.85rem; margin-top:10px;"></div>
+  </div>
+
+  <div id="app-screen" style="display:none;">
+    <div class="panel" style="text-align:center;">
+      <h2 style="border:none; margin-bottom:5px;">Leitor de ISBN<br>CECM Santa Felicidade</h2>
+      <p style="margin-bottom: 15px; color: #555; font-size:0.9rem;">Aponte a câmera para o código de barras.</p>
+      
+      <div id="camera-container">
+        <video id="video" autoplay playsinline muted></video>
+        <div class="target-box"></div>
+      </div>
+
+      <div style="margin-top: 15px; display:flex; gap:10px; justify-content:center;">
+        <button id="btn-iniciar" class="btn-primary">Abrir Câmera</button>
+        <button id="btn-flash" class="btn-secondary" style="display:none;">🔦 Lanterna</button>
+      </div>
+      <div id="status-msg" style="margin-top: 10px; color: var(--error); font-weight: bold;"></div>
+    </div>
+
+    <div id="confirm-form" class="panel" style="display:none;">
+      <h2>Confirmar Dados</h2>
+      <div class="input-group"><label>ISBN Lido</label><input type="text" id="c-isbn" readonly style="background:#eee;"></div>
+      <div class="input-group"><label>Número do Livro (ID)</label><input type="text" id="c-numero" placeholder="Ex.: LIV-001"></div>
+      <div class="input-group"><label>Título</label><input type="text" id="c-titulo"></div>
+      <div class="input-group"><label>Autor</label><input type="text" id="c-autor"></div>
+      <div class="input-group"><label>Editora</label><input type="text" id="c-editora"></div>
+      <div class="input-group"><label>Gênero</label><input type="text" id="c-genero"></div>
+      
+      <div style="display:flex; gap:10px; margin-top:20px;">
+        <button id="btn-salvar-livro" class="btn-primary" style="flex:1;">Salvar</button>
+        <button id="btn-cancelar" class="btn-secondary" style="flex:1;">Escanear Outro</button>
+      </div>
+      <div id="save-msg" style="margin-top:10px; font-weight:bold;"></div>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script src="leitor.js"></script>
+</body>
+</html>
